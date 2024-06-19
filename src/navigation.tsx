@@ -1,3 +1,4 @@
+// AppNavigator.tsx
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -5,6 +6,7 @@ import HomeScreen from './screens/HomeScreen';
 import ProductDetailScreen from './screens/ProductDetailsScreen';
 import AddProductScreen from './screens/AddProductScreen';
 import EditProductScreen from './screens/EditProductScreen';
+import HeaderTitle from './components/molecules/HeaderTitle';
 
 const Stack = createStackNavigator();
 
@@ -15,22 +17,22 @@ const AppNavigator = () => {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{title: 'Banco'}}
+          options={{headerTitle: () => <HeaderTitle />}}
         />
         <Stack.Screen
           name="ProductDetail"
           component={ProductDetailScreen}
-          options={{title: 'Detalles del Producto'}}
+          options={{headerTitle: () => <HeaderTitle />}}
         />
         <Stack.Screen
           name="AddProduct"
           component={AddProductScreen}
-          options={{title: 'Agregar Producto'}}
+          options={{headerTitle: () => <HeaderTitle />}}
         />
         <Stack.Screen
           name="EditProduct"
           component={EditProductScreen}
-          options={{title: 'Editar Producto'}}
+          options={{headerTitle: () => <HeaderTitle />}}
         />
       </Stack.Navigator>
     </NavigationContainer>
