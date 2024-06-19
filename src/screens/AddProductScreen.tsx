@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   ScrollView,
@@ -22,11 +22,18 @@ const AddProductScreen = ({navigation}: {navigation: any}) => {
   const [description, setDescription] = useState('');
   const [logo, setLogo] = useState('');
   const [dateRelease, setDateRelease] = useState(new Date());
-  const [dateRevision, setDateRevision] = useState(new Date());
+  const [dateRevision, setDateRevision] = useState(
+    new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+  );
   const [errors, setErrors] = useState<any>({});
   const [showDateReleasePicker, setShowDateReleasePicker] = useState(false);
-  const [showDateRevisionPicker, setShowDateRevisionPicker] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    const newDateRevision = new Date(dateRelease);
+    newDateRevision.setFullYear(dateRelease.getFullYear() + 1);
+    setDateRevision(newDateRevision);
+  }, [dateRelease]);
 
   const handleSubmit = async () => {
     const newProduct: Product = {
@@ -108,6 +115,7 @@ const AddProductScreen = ({navigation}: {navigation: any}) => {
         open={showDateReleasePicker}
         date={dateRelease}
         mode="date"
+        minimumDate={new Date()}
         onConfirm={date => {
           setShowDateReleasePicker(false);
           setDateRelease(date);
@@ -120,32 +128,17 @@ const AddProductScreen = ({navigation}: {navigation: any}) => {
         <TextLabel text={errors.date_release} style={styles.errorText} />
       )}
       <TextLabel text="Fecha de Revisión" />
-      <TouchableOpacity onPress={() => setShowDateRevisionPicker(true)}>
-        <View
-          style={[
-            styles.input,
-            styles.dateInput,
-            errors.date_revision && styles.errorInput,
-          ]}>
-          <TextLabel
-            text={dateRevision.toISOString().split('T')[0]}
-            style={errors.date_revision && styles.errorText}
-          />
-        </View>
-      </TouchableOpacity>
-      <DatePicker
-        modal
-        open={showDateRevisionPicker}
-        date={dateRevision}
-        mode="date"
-        onConfirm={date => {
-          setShowDateRevisionPicker(false);
-          setDateRevision(date);
-        }}
-        onCancel={() => {
-          setShowDateRevisionPicker(false);
-        }}
-      />
+      <View
+        style={[
+          styles.input,
+          styles.dateInput,
+          errors.date_revision && styles.errorInput,
+        ]}>
+        <TextLabel
+          text={dateRevision.toISOString().split('T')[0]}
+          style={errors.date_revision && styles.errorText}
+        />
+      </View>
       {errors.date_revision && (
         <TextLabel text={errors.date_revision} style={styles.errorText} />
       )}
@@ -158,7 +151,6 @@ const AddProductScreen = ({navigation}: {navigation: any}) => {
           setDescription('');
           setLogo('');
           setDateRelease(new Date());
-          setDateRevision(new Date());
           setErrors({});
         }}
         style={styles.resetButton}

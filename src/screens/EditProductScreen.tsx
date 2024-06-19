@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   ScrollView,
@@ -39,8 +39,14 @@ const EditProductScreen = ({
     new Date(product?.date_revision || ''),
   );
   const [errors, setErrors] = useState<any>({});
-  const [showDateReleasePicker, setShowDateReleasePicker] = useState(false); // Definir estado
-  const [showDateRevisionPicker, setShowDateRevisionPicker] = useState(false); // Definir estado
+  const [showDateReleasePicker, setShowDateReleasePicker] = useState(false);
+  const [showDateRevisionPicker, setShowDateRevisionPicker] = useState(false);
+
+  useEffect(() => {
+    const newDateRevision = new Date(dateRelease);
+    newDateRevision.setFullYear(dateRelease.getFullYear() + 1);
+    setDateRevision(newDateRevision);
+  }, [dateRelease]);
 
   const handleSubmit = async () => {
     if (product) {
@@ -54,7 +60,7 @@ const EditProductScreen = ({
       };
 
       try {
-        await dispatch(updateProduct(updatedProduct)).unwrap(); // Solo pasamos el producto actualizado
+        await dispatch(updateProduct(updatedProduct)).unwrap();
         await dispatch(fetchAllProducts()).unwrap();
         Alert.alert('Producto actualizado exitosamente');
         navigation.goBack();
@@ -96,7 +102,7 @@ const EditProductScreen = ({
         onChangeText={setLogo}
         style={styles.input}
       />
-      <TextLabel text="Fecha liberación" />
+      <TextLabel text="Fecha de Liberación" />
       <TouchableOpacity onPress={() => setShowDateReleasePicker(true)}>
         <View style={styles.input}>
           <TextLabel text={dateRelease.toISOString().split('T')[0]} />
@@ -107,6 +113,7 @@ const EditProductScreen = ({
         open={showDateReleasePicker}
         date={dateRelease}
         mode="date"
+        minimumDate={new Date()}
         onConfirm={date => {
           setShowDateReleasePicker(false);
           setDateRelease(date);
@@ -115,25 +122,10 @@ const EditProductScreen = ({
           setShowDateReleasePicker(false);
         }}
       />
-      <TextLabel text="Fecha revisión" />
-      <TouchableOpacity onPress={() => setShowDateRevisionPicker(true)}>
-        <View style={styles.input}>
-          <TextLabel text={dateRevision.toISOString().split('T')[0]} />
-        </View>
-      </TouchableOpacity>
-      <DatePicker
-        modal
-        open={showDateRevisionPicker}
-        date={dateRevision}
-        mode="date"
-        onConfirm={date => {
-          setShowDateRevisionPicker(false);
-          setDateRevision(date);
-        }}
-        onCancel={() => {
-          setShowDateRevisionPicker(false);
-        }}
-      />
+      <TextLabel text="Fecha de Revisión" />
+      <View style={styles.input}>
+        <TextLabel text={dateRevision.toISOString().split('T')[0]} />
+      </View>
       <Button
         title="Guardar Cambios"
         onPress={handleSubmit}
@@ -160,6 +152,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 8,
     paddingHorizontal: 8,
+    justifyContent: 'center',
   },
   submitButton: {
     marginTop: 16,
