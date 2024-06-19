@@ -1,4 +1,3 @@
-// src/screens/AddProductScreen.tsx
 import React, {useState} from 'react';
 import {
   View,
@@ -48,7 +47,6 @@ const AddProductScreen = ({navigation}: {navigation: any}) => {
         Alert.alert('Producto agregado exitosamente');
         navigation.goBack();
       } catch (error) {
-        console.error('Error:', error);
         Alert.alert('Error', 'No se pudo agregar el producto');
       }
     }
