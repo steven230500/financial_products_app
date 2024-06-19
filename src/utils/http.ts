@@ -1,6 +1,5 @@
-// src/utils/http.ts
 import axios from 'axios';
-import {Platform} from 'react-native';
+import {Platform, Alert} from 'react-native';
 
 const getBaseURL = () => {
   if (Platform.OS === 'ios') {
@@ -16,29 +15,17 @@ const http = axios.create({
 
 http.interceptors.request.use(
   config => {
-    console.log('Request:', {
-      url: config.url,
-      method: config.method,
-      headers: config.headers,
-      data: config.data,
-      params: config.params,
-    });
     config.headers['Content-Type'] = 'application/json';
     return config;
   },
   error => {
-    console.error('Request error:', error);
+    Alert.alert('Request Error', error.message);
     return Promise.reject(error);
   },
 );
 
 http.interceptors.response.use(
   response => {
-    console.log('Response:', {
-      url: response.config.url,
-      status: response.status,
-      data: response.data,
-    });
     if (response.status === 200) {
       return response.data;
     }
@@ -46,15 +33,15 @@ http.interceptors.response.use(
   },
   error => {
     if (error.response) {
-      console.error('Response error:', {
-        url: error.config.url,
-        status: error.response.status,
-        data: error.response.data,
-      });
+      Alert.alert(
+        'Response Error',
+        `Status: ${error.response.status}`,
+        error.response.data,
+      );
     } else if (error.request) {
-      console.error('No response received:', error.request);
+      Alert.alert('No Response', 'No response received from the server.');
     } else {
-      console.error('Error setting up request:', error.message);
+      Alert.alert('Error', error.message);
     }
     return Promise.reject(error);
   },

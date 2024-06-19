@@ -25,7 +25,7 @@ export const fetchAllProducts = createAsyncThunk(
   'products/fetchAll',
   async () => {
     const response = await fetchProducts();
-    return response;
+    return response as Product[];
   },
 );
 
@@ -33,7 +33,7 @@ export const createProduct = createAsyncThunk(
   'products/create',
   async (product: Product) => {
     const response = await apiCreateProduct(product);
-    return response;
+    return response as Product;
   },
 );
 
@@ -41,7 +41,7 @@ export const updateProduct = createAsyncThunk(
   'products/update',
   async (product: Product) => {
     const response = await apiUpdateProduct(product.id, product);
-    return response;
+    return response as Product;
   },
 );
 
@@ -59,7 +59,7 @@ const productSlice = createSlice({
   reducers: {
     filterProducts: (state, action: PayloadAction<string>) => {
       if (Array.isArray(state.products)) {
-        state.filteredProducts = state.products.filter(product =>
+        state.filteredProducts = state.products.filter((product: Product) =>
           product.name.toLowerCase().includes(action.payload.toLowerCase()),
         );
       } else {
@@ -72,36 +72,48 @@ const productSlice = createSlice({
       .addCase(fetchAllProducts.pending, state => {
         state.loading = true;
       })
-      .addCase(fetchAllProducts.fulfilled, (state, action) => {
-        state.products = action.payload || [];
-        state.filteredProducts = action.payload || [];
-        state.loading = false;
-      })
+      .addCase(
+        fetchAllProducts.fulfilled,
+        (state, action: PayloadAction<Product[]>) => {
+          state.products = action.payload || [];
+          state.filteredProducts = action.payload || [];
+          state.loading = false;
+        },
+      )
       .addCase(fetchAllProducts.rejected, (state, action) => {
         state.error = action.error.message || 'Failed to fetch products';
         state.loading = false;
       })
-      .addCase(createProduct.fulfilled, (state, action) => {
-        state.products.push(action.payload);
-        state.filteredProducts.push(action.payload);
-      })
-      .addCase(updateProduct.fulfilled, (state, action) => {
-        const index = state.products.findIndex(
-          product => product.id === action.payload.id,
-        );
-        if (index !== -1) {
-          state.products[index] = action.payload;
-          state.filteredProducts[index] = action.payload;
-        }
-      })
-      .addCase(deleteProduct.fulfilled, (state, action) => {
-        state.products = state.products.filter(
-          product => product.id !== action.payload,
-        );
-        state.filteredProducts = state.filteredProducts.filter(
-          product => product.id !== action.payload,
-        );
-      });
+      .addCase(
+        createProduct.fulfilled,
+        (state, action: PayloadAction<Product>) => {
+          state.products.push(action.payload);
+          state.filteredProducts.push(action.payload);
+        },
+      )
+      .addCase(
+        updateProduct.fulfilled,
+        (state, action: PayloadAction<Product>) => {
+          const index = state.products.findIndex(
+            (product: {id: string}) => product.id === action.payload.id,
+          );
+          if (index !== -1) {
+            state.products[index] = action.payload;
+            state.filteredProducts[index] = action.payload;
+          }
+        },
+      )
+      .addCase(
+        deleteProduct.fulfilled,
+        (state, action: PayloadAction<string>) => {
+          state.products = state.products.filter(
+            (product: {id: string}) => product.id !== action.payload,
+          );
+          state.filteredProducts = state.filteredProducts.filter(
+            (product: {id: string}) => product.id !== action.payload,
+          );
+        },
+      );
   },
 });
 
