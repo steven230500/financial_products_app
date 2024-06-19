@@ -1,12 +1,6 @@
 // src/components/molecules/ProductItem.tsx
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ViewStyle,
-} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Product} from '../../models/Product';
 
 const ProductItem = ({
@@ -17,8 +11,8 @@ const ProductItem = ({
   onPress: () => void;
 }) => {
   return (
-    <TouchableOpacity onPress={onPress}>
-      <View style={[styles.container]}>
+    <TouchableOpacity onPress={onPress} style={styles.touchable}>
+      <View style={styles.container}>
         <View style={styles.textContainer}>
           <Text style={styles.name}>{product.name}</Text>
           <Text style={styles.id}>ID: {product.id}</Text>
@@ -32,16 +26,18 @@ const ProductItem = ({
 };
 
 const styles = StyleSheet.create({
+  touchable: {
+    flex: 1,
+  },
   container: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 16,
     paddingHorizontal: 16,
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: '#ccc',
     borderRadius: 8,
-    marginVertical: 4,
     backgroundColor: '#fff',
   },
   textContainer: {
@@ -49,7 +45,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 16,
-    marginBottom: 4,
+    fontWeight: 'bold',
   },
   id: {
     fontSize: 14,

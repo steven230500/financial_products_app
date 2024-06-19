@@ -166,10 +166,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     color: '#000000',
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 16,
   },
   input: {
     height: 40,
