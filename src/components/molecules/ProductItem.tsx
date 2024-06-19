@@ -48,7 +48,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   name: {
-    fontSize: 18,
+    fontSize: 16,
+    marginBottom: 4,
   },
   id: {
     fontSize: 14,
