@@ -1,63 +1,33 @@
-import React, {useState, useEffect} from 'react';
-import {View, ScrollView, Alert, TouchableOpacity} from 'react-native';
-import {useDispatch} from 'react-redux';
-import {AppDispatch} from '../../redux/store';
-import {createProduct} from '../../redux/slices/productSlice';
-import {Product} from '../../models/Product';
+import React from 'react';
+import {View, ScrollView, TouchableOpacity} from 'react-native';
 import DatePicker from 'react-native-date-picker';
-import {validateProduct} from '../../utils/validation';
-
 import styles from './AddProductScreen.styles';
 import {AddProductScreenProps} from './AddProductScreen.types';
 import {strings} from './AddProductScreen.strings';
 import {Button, TextInputField, TextLabel} from '../../components/atoms';
+import {useAddProduct} from '../../hooks/useAddProduct';
 
 const AddProductScreen: React.FC<AddProductScreenProps> = ({navigation}) => {
-  const [id, setId] = useState<string>('');
-  const [name, setName] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
-  const [logo, setLogo] = useState<string>('');
-  const [dateRelease, setDateRelease] = useState<Date>(new Date());
-  const [dateRevision, setDateRevision] = useState<Date>(
-    new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
-  );
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [showDateReleasePicker, setShowDateReleasePicker] =
-    useState<boolean>(false);
-  const dispatch = useDispatch<AppDispatch>();
-
-  useEffect(() => {
-    const newDateRevision = new Date(dateRelease);
-    newDateRevision.setFullYear(dateRelease.getFullYear() + 1);
-    setDateRevision(newDateRevision);
-  }, [dateRelease]);
-
-  const handleSubmit = async () => {
-    const newProduct: Product = {
-      id,
-      name,
-      description,
-      logo,
-      date_release: dateRelease.toISOString().split('T')[0],
-      date_revision: dateRevision.toISOString().split('T')[0],
-    };
-
-    const {valid, errors} = await validateProduct(newProduct);
-    setErrors(errors);
-
-    if (valid) {
-      try {
-        await dispatch(createProduct(newProduct)).unwrap();
-        Alert.alert(strings.successTitle, strings.successMessage);
-        navigation.goBack();
-      } catch (error) {
-        Alert.alert(strings.errorTitle, strings.errorMessage);
-      }
-    }
-  };
-
-  const isFormValid =
-    Object.keys(errors).length === 0 && id && name && description && logo;
+  const {
+    id,
+    name,
+    description,
+    logo,
+    dateRelease,
+    dateRevision,
+    errors,
+    showDateReleasePicker,
+    setId,
+    setName,
+    setDescription,
+    setLogo,
+    setDateRelease,
+    setShowDateReleasePicker,
+    handleSubmit,
+    resetForm,
+    isFormValid,
+    hasSubmitted,
+  } = useAddProduct(navigation);
 
   return (
     <ScrollView style={styles.container}>
@@ -71,10 +41,10 @@ const AddProductScreen: React.FC<AddProductScreenProps> = ({navigation}) => {
         placeholder={strings.idPlaceholder}
         value={id}
         onChangeText={setId}
-        style={errors.id ? styles.errorInput : undefined}
+        style={hasSubmitted && errors.id ? styles.errorInput : undefined}
         testID="id-input"
       />
-      {errors.id && (
+      {hasSubmitted && errors.id && (
         <TextLabel
           text={errors.id}
           style={styles.errorText}
@@ -86,10 +56,10 @@ const AddProductScreen: React.FC<AddProductScreenProps> = ({navigation}) => {
         placeholder={strings.namePlaceholder}
         value={name}
         onChangeText={setName}
-        style={errors.name ? styles.errorInput : undefined}
+        style={hasSubmitted && errors.name ? styles.errorInput : undefined}
         testID="name-input"
       />
-      {errors.name && (
+      {hasSubmitted && errors.name && (
         <TextLabel
           text={errors.name}
           style={styles.errorText}
@@ -101,10 +71,12 @@ const AddProductScreen: React.FC<AddProductScreenProps> = ({navigation}) => {
         placeholder={strings.descriptionPlaceholder}
         value={description}
         onChangeText={setDescription}
-        style={errors.description ? styles.errorInput : undefined}
+        style={
+          hasSubmitted && errors.description ? styles.errorInput : undefined
+        }
         testID="description-input"
       />
-      {errors.description && (
+      {hasSubmitted && errors.description && (
         <TextLabel
           text={errors.description}
           style={styles.errorText}
@@ -116,10 +88,10 @@ const AddProductScreen: React.FC<AddProductScreenProps> = ({navigation}) => {
         placeholder={strings.logoPlaceholder}
         value={logo}
         onChangeText={setLogo}
-        style={errors.logo ? styles.errorInput : undefined}
+        style={hasSubmitted && errors.logo ? styles.errorInput : undefined}
         testID="logo-input"
       />
-      {errors.logo && (
+      {hasSubmitted && errors.logo && (
         <TextLabel
           text={errors.logo}
           style={styles.errorText}
@@ -134,11 +106,13 @@ const AddProductScreen: React.FC<AddProductScreenProps> = ({navigation}) => {
           style={[
             styles.input,
             styles.dateInput,
-            errors.date_release ? styles.errorInput : undefined,
+            hasSubmitted && errors.date_release ? styles.errorInput : undefined,
           ]}>
           <TextLabel
             text={dateRelease.toISOString().split('T')[0]}
-            style={errors.date_release ? styles.errorText : undefined}
+            style={
+              hasSubmitted && errors.date_release ? styles.errorText : undefined
+            }
             testID="date-release-value"
           />
         </View>
@@ -157,7 +131,7 @@ const AddProductScreen: React.FC<AddProductScreenProps> = ({navigation}) => {
           setShowDateReleasePicker(false);
         }}
       />
-      {errors.date_release && (
+      {hasSubmitted && errors.date_release && (
         <TextLabel
           text={errors.date_release}
           style={styles.errorText}
@@ -172,15 +146,17 @@ const AddProductScreen: React.FC<AddProductScreenProps> = ({navigation}) => {
         style={[
           styles.input,
           styles.dateInput,
-          errors.date_revision ? styles.errorInput : undefined,
+          hasSubmitted && errors.date_revision ? styles.errorInput : undefined,
         ]}>
         <TextLabel
           text={dateRevision.toISOString().split('T')[0]}
-          style={errors.date_revision ? styles.errorText : undefined}
+          style={
+            hasSubmitted && errors.date_revision ? styles.errorText : undefined
+          }
           testID="date-revision-value"
         />
       </View>
-      {errors.date_revision && (
+      {hasSubmitted && errors.date_revision && (
         <TextLabel
           text={errors.date_revision}
           style={styles.errorText}
@@ -195,14 +171,7 @@ const AddProductScreen: React.FC<AddProductScreenProps> = ({navigation}) => {
       />
       <Button
         title={strings.resetButton}
-        onPress={() => {
-          setId('');
-          setName('');
-          setDescription('');
-          setLogo('');
-          setDateRelease(new Date());
-          setErrors({});
-        }}
+        onPress={resetForm}
         style={styles.resetButton}
         testID="reset-button"
       />

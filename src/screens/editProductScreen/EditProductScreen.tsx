@@ -1,68 +1,34 @@
-import React, {useState, useEffect} from 'react';
-import {View, ScrollView, Alert, TouchableOpacity} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState, AppDispatch} from '../../redux/store';
-import {updateProduct, fetchAllProducts} from '../../redux/slices/productSlice';
+import React from 'react';
+import {View, ScrollView, TouchableOpacity} from 'react-native';
 import DatePicker from 'react-native-date-picker';
-import {Product} from '../../models/Product';
 import styles from './EditProductScreen.styles';
 import {EditProductScreenProps} from './EditProductScreen.types';
 import {strings} from './EditProductScreen.strings';
 import {Button, TextInputField, TextLabel} from '../../components/atoms';
+import {useEditProduct} from '../../hooks/useEditProduct';
 
 const EditProductScreen: React.FC<EditProductScreenProps> = ({
   route,
   navigation,
 }) => {
   const {productId} = route.params;
-  const dispatch = useDispatch<AppDispatch>();
-  const product = useSelector((state: RootState) =>
-    state.products.products.find((prod: Product) => prod.id === productId),
-  );
-
-  const [id, setId] = useState<string>(product?.id || '');
-  const [name, setName] = useState<string>(product?.name || '');
-  const [description, setDescription] = useState<string>(
-    product?.description || '',
-  );
-  const [logo, setLogo] = useState<string>(product?.logo || '');
-  const [dateRelease, setDateRelease] = useState<Date>(
-    new Date(product?.date_release || ''),
-  );
-  const [dateRevision, setDateRevision] = useState<Date>(
-    new Date(product?.date_revision || ''),
-  );
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [showDateReleasePicker, setShowDateReleasePicker] =
-    useState<boolean>(false);
-
-  useEffect(() => {
-    const newDateRevision = new Date(dateRelease);
-    newDateRevision.setFullYear(dateRelease.getFullYear() + 1);
-    setDateRevision(newDateRevision);
-  }, [dateRelease]);
-
-  const handleSubmit = async () => {
-    if (product) {
-      const updatedProduct: Product = {
-        ...product,
-        name,
-        description,
-        logo,
-        date_release: dateRelease.toISOString().split('T')[0],
-        date_revision: dateRevision.toISOString().split('T')[0],
-      };
-
-      try {
-        await dispatch(updateProduct(updatedProduct)).unwrap();
-        await dispatch(fetchAllProducts()).unwrap();
-        Alert.alert(strings.successTitle, strings.successMessage);
-        navigation.goBack();
-      } catch (error) {
-        Alert.alert(strings.errorTitle, strings.errorMessage);
-      }
-    }
-  };
+  const {
+    id,
+    name,
+    description,
+    logo,
+    dateRelease,
+    dateRevision,
+    errors,
+    showDateReleasePicker,
+    setName,
+    setDescription,
+    setLogo,
+    setDateRelease,
+    setShowDateReleasePicker,
+    handleSubmit,
+    hasSubmitted,
+  } = useEditProduct(productId, navigation);
 
   return (
     <ScrollView style={styles.container}>
@@ -80,25 +46,39 @@ const EditProductScreen: React.FC<EditProductScreenProps> = ({
         placeholder={strings.namePlaceholder}
         value={name}
         onChangeText={setName}
-        style={styles.input}
+        style={hasSubmitted && errors.name ? styles.errorInput : undefined}
       />
+      {hasSubmitted && errors.name && (
+        <TextLabel text={errors.name} style={styles.errorText} />
+      )}
       <TextLabel text={strings.descriptionLabel} />
       <TextInputField
         placeholder={strings.descriptionPlaceholder}
         value={description}
         onChangeText={setDescription}
-        style={styles.input}
+        style={
+          hasSubmitted && errors.description ? styles.errorInput : undefined
+        }
       />
+      {hasSubmitted && errors.description && (
+        <TextLabel text={errors.description} style={styles.errorText} />
+      )}
       <TextLabel text={strings.logoLabel} />
       <TextInputField
         placeholder={strings.logoPlaceholder}
         value={logo}
         onChangeText={setLogo}
-        style={styles.input}
+        style={hasSubmitted && errors.logo ? styles.errorInput : undefined}
       />
+      {hasSubmitted && errors.logo && (
+        <TextLabel text={errors.logo} style={styles.errorText} />
+      )}
       <TextLabel text={strings.dateReleaseLabel} />
       <TouchableOpacity onPress={() => setShowDateReleasePicker(true)}>
-        <View style={styles.input}>
+        <View
+          style={
+            hasSubmitted && errors.date_release ? styles.errorInput : undefined
+          }>
           <TextLabel text={dateRelease.toISOString().split('T')[0]} />
         </View>
       </TouchableOpacity>
@@ -116,10 +96,19 @@ const EditProductScreen: React.FC<EditProductScreenProps> = ({
           setShowDateReleasePicker(false);
         }}
       />
+      {hasSubmitted && errors.date_release && (
+        <TextLabel text={errors.date_release} style={styles.errorText} />
+      )}
       <TextLabel text={strings.dateRevisionLabel} />
-      <View style={styles.input}>
+      <View
+        style={
+          hasSubmitted && errors.date_revision ? styles.errorInput : undefined
+        }>
         <TextLabel text={dateRevision.toISOString().split('T')[0]} />
       </View>
+      {hasSubmitted && errors.date_revision && (
+        <TextLabel text={errors.date_revision} style={styles.errorText} />
+      )}
       <Button
         title={strings.saveButton}
         onPress={handleSubmit}

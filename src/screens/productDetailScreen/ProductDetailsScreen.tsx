@@ -1,14 +1,14 @@
 import React, {useState} from 'react';
-import {View, Text, Image, Alert} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState, AppDispatch} from '../../redux/store';
-import {deleteProduct, fetchAllProducts} from '../../redux/slices/productSlice';
+import {View, Text, Image} from 'react-native';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../redux/store';
 import {Product} from '../../models/Product';
 import styles from './ProductDetailsScreen.styles';
 import {ProductDetailScreenProps} from './ProductDetailsScreen.types';
 import {strings} from './ProductDetailsScreen.strings';
 import {Button} from '../../components/atoms';
 import {BottomSheet} from '../../components/molecules';
+import {useProductActions} from '../../hooks/useProductActions';
 
 const notFoundIcon = require('../../../assets/icons/notFound.png');
 
@@ -17,23 +17,13 @@ const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({
   navigation,
 }) => {
   const {productId} = route.params;
-  const dispatch = useDispatch<AppDispatch>();
   const product = useSelector((state: RootState) =>
     state.products.products.find((prod: Product) => prod.id === productId),
   );
 
   const [showBottomSheet, setShowBottomSheet] = useState<boolean>(false);
   const [imageError, setImageError] = useState<boolean>(false);
-
-  const handleDelete = async () => {
-    try {
-      await dispatch(deleteProduct(productId)).unwrap();
-      await dispatch(fetchAllProducts()).unwrap();
-      navigation.goBack();
-    } catch (error) {
-      Alert.alert(strings.errorDelete, strings.errorDeleteMessage);
-    }
-  };
+  const {handleDelete} = useProductActions();
 
   if (!product) {
     return (
@@ -102,7 +92,7 @@ const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({
         </Text>
         <Button
           title={strings.confirmDelete}
-          onPress={handleDelete}
+          onPress={() => handleDelete(productId, () => navigation.goBack())}
           style={styles.modalConfirmButton}
           testID="confirm-delete-button"
         />

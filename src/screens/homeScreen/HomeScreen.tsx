@@ -1,34 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {View} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState, AppDispatch} from '../../redux/store';
-import {
-  fetchAllProducts,
-  filterProducts,
-} from '../../redux/slices/productSlice';
 import styles from './HomeScreen.styles';
 import {HomeScreenProps} from './HomeScreen.types';
 import {strings} from './HomeScreen.strings';
 import {Button} from '../../components/atoms';
 import {SearchBar} from '../../components/molecules';
 import {ProductList, SkeletonList} from '../../components/organisms';
+import {useProducts} from '../../hooks/useProducts';
 
 const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
-  const dispatch = useDispatch<AppDispatch>();
-  const products = useSelector(
-    (state: RootState) => state.products.filteredProducts,
-  );
-  const loading = useSelector((state: RootState) => state.products.loading);
-
-  const [search, setSearch] = useState<string>('');
-
-  useEffect(() => {
-    dispatch(fetchAllProducts());
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(filterProducts(search));
-  }, [search, dispatch]);
+  const {products, loading, search, setSearch} = useProducts();
 
   return (
     <View style={styles.container}>
