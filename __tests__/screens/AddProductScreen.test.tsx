@@ -3,7 +3,6 @@ import {render, fireEvent, waitFor} from '@testing-library/react-native';
 import {Provider} from 'react-redux';
 import configureStore from 'redux-mock-store';
 import AddProductScreen from '../../src/screens/addProductScreen/AddProductScreen';
-import {createProduct} from '../../src/redux/slices/productSlice';
 import {thunk} from 'redux-thunk';
 
 jest.mock('react-native-date-picker', () => 'DatePicker');
@@ -46,13 +45,13 @@ describe('AddProductScreen', () => {
   });
 
   it('shows validation errors when form is submitted with empty fields', async () => {
-    const {getByText} = render(
+    const {getByTestId, getByText} = render(
       <Provider store={store}>
         <AddProductScreen navigation={{navigate: jest.fn()}} />
       </Provider>,
     );
 
-    fireEvent.press(getByText('Enviar'));
+    fireEvent.press(getByTestId('submit-button'));
 
     await waitFor(() => {
       expect(getByText('ID no válido')).toBeTruthy();
@@ -75,7 +74,7 @@ describe('AddProductScreen', () => {
       date_revision: '2025-01-01',
     };
 
-    const {getByPlaceholderText, getByText} = render(
+    const {getByPlaceholderText, getByText, getByTestId} = render(
       <Provider store={store}>
         <AddProductScreen navigation={{navigate: mockNavigate}} />
       </Provider>,
@@ -91,7 +90,7 @@ describe('AddProductScreen', () => {
       getByPlaceholderText('URL del logo'),
       mockProduct.logo,
     );
-    fireEvent.press(getByText('Enviar'));
+    fireEvent.press(getByTestId('submit-button'));
 
     await waitFor(() => {
       expect(mockDispatch).toHaveBeenCalledWith(expect.any(Function));

@@ -6,6 +6,7 @@ import {SkeletonLoaderProps} from './SkeletonLoader.types';
 export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
   width,
   height,
+  testID,
 }) => {
   const opacity = React.useRef(new Animated.Value(0.3)).current;
 
@@ -28,5 +29,10 @@ export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
     ).start();
   }, [opacity]);
 
-  return <Animated.View style={[styles.loader, {width, height, opacity}]} />;
+  return (
+    <Animated.View
+      style={[styles.loader, {width, height, opacity}]}
+      testID={testID}
+    />
+  );
 };

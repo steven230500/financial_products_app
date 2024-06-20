@@ -9,6 +9,7 @@ export const TextInputField: React.FC<TextInputFieldProps> = ({
   onChangeText,
   style,
   editable = true,
+  testID,
 }) => {
   return (
     <TextInput
@@ -18,6 +19,7 @@ export const TextInputField: React.FC<TextInputFieldProps> = ({
       value={value}
       onChangeText={onChangeText}
       editable={editable}
+      testID={testID}
     />
   );
 };

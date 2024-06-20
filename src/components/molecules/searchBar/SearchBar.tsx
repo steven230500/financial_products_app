@@ -10,6 +10,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({value, onChangeText}) => {
       placeholder="Search..."
       value={value}
       onChangeText={onChangeText}
+      testID="search-bar"
     />
   );
 };

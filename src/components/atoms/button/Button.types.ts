@@ -4,4 +4,6 @@ export interface ButtonProps {
   title: string;
   onPress: () => void;
   style?: StyleProp<ViewStyle>;
+  testID?: string;
+  disabled?: boolean;
 }

@@ -7,7 +7,7 @@ const iconPath = require('../../../../assets/icons/bank.png');
 
 export const HeaderTitle: React.FC = () => (
   <View style={styles.headerContainer}>
-    <Image source={iconPath} style={styles.icon} />
+    <Image source={iconPath} style={styles.icon} testID="header-icon" />
     <Text style={styles.headerText}>{strings.title}</Text>
   </View>
 );

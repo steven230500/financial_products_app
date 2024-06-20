@@ -6,4 +6,5 @@ export interface TextInputFieldProps {
   onChangeText: (text: string) => void;
   style?: StyleProp<TextStyle>;
   editable?: boolean;
+  testID?: string;
 }

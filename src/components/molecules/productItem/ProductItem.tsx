@@ -5,7 +5,10 @@ import {ProductItemProps} from './ProductItem.types';
 
 export const ProductItem: React.FC<ProductItemProps> = ({product, onPress}) => {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.touchable}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={styles.touchable}
+      testID="product-item">
       <View style={styles.container}>
         <View style={styles.textContainer}>
           <Text style={styles.name}>{product.name}</Text>

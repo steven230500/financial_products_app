@@ -13,8 +13,13 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
       animationType="slide"
       transparent={true}
       visible={visible}
-      onRequestClose={onClose}>
-      <TouchableOpacity style={styles.overlay} onPress={onClose} />
+      onRequestClose={onClose}
+      testID="bottom-sheet">
+      <TouchableOpacity
+        style={styles.overlay}
+        onPress={onClose}
+        testID="overlay"
+      />
       <View style={styles.container}>{children}</View>
     </Modal>
   );

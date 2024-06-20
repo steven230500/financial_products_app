@@ -56,45 +56,80 @@ const AddProductScreen: React.FC<AddProductScreenProps> = ({navigation}) => {
     }
   };
 
+  const isFormValid =
+    Object.keys(errors).length === 0 && id && name && description && logo;
+
   return (
     <ScrollView style={styles.container}>
-      <TextLabel text={strings.formTitle} style={styles.title} />
-      <TextLabel text={strings.idLabel} />
+      <TextLabel
+        text={strings.formTitle}
+        style={styles.title}
+        testID="form-title"
+      />
+      <TextLabel text={strings.idLabel} testID="id-label" />
       <TextInputField
         placeholder={strings.idPlaceholder}
         value={id}
         onChangeText={setId}
         style={errors.id ? styles.errorInput : undefined}
+        testID="id-input"
       />
-      {errors.id && <TextLabel text={errors.id} style={styles.errorText} />}
-      <TextLabel text={strings.nameLabel} />
+      {errors.id && (
+        <TextLabel
+          text={errors.id}
+          style={styles.errorText}
+          testID="id-error"
+        />
+      )}
+      <TextLabel text={strings.nameLabel} testID="name-label" />
       <TextInputField
         placeholder={strings.namePlaceholder}
         value={name}
         onChangeText={setName}
         style={errors.name ? styles.errorInput : undefined}
+        testID="name-input"
       />
-      {errors.name && <TextLabel text={errors.name} style={styles.errorText} />}
-      <TextLabel text={strings.descriptionLabel} />
+      {errors.name && (
+        <TextLabel
+          text={errors.name}
+          style={styles.errorText}
+          testID="name-error"
+        />
+      )}
+      <TextLabel text={strings.descriptionLabel} testID="description-label" />
       <TextInputField
         placeholder={strings.descriptionPlaceholder}
         value={description}
         onChangeText={setDescription}
         style={errors.description ? styles.errorInput : undefined}
+        testID="description-input"
       />
       {errors.description && (
-        <TextLabel text={errors.description} style={styles.errorText} />
+        <TextLabel
+          text={errors.description}
+          style={styles.errorText}
+          testID="description-error"
+        />
       )}
-      <TextLabel text={strings.logoLabel} />
+      <TextLabel text={strings.logoLabel} testID="logo-label" />
       <TextInputField
         placeholder={strings.logoPlaceholder}
         value={logo}
         onChangeText={setLogo}
         style={errors.logo ? styles.errorInput : undefined}
+        testID="logo-input"
       />
-      {errors.logo && <TextLabel text={errors.logo} style={styles.errorText} />}
-      <TextLabel text={strings.dateReleaseLabel} />
-      <TouchableOpacity onPress={() => setShowDateReleasePicker(true)}>
+      {errors.logo && (
+        <TextLabel
+          text={errors.logo}
+          style={styles.errorText}
+          testID="logo-error"
+        />
+      )}
+      <TextLabel text={strings.dateReleaseLabel} testID="date-release-label" />
+      <TouchableOpacity
+        onPress={() => setShowDateReleasePicker(true)}
+        testID="date-release-picker">
         <View
           style={[
             styles.input,
@@ -104,6 +139,7 @@ const AddProductScreen: React.FC<AddProductScreenProps> = ({navigation}) => {
           <TextLabel
             text={dateRelease.toISOString().split('T')[0]}
             style={errors.date_release ? styles.errorText : undefined}
+            testID="date-release-value"
           />
         </View>
       </TouchableOpacity>
@@ -122,9 +158,16 @@ const AddProductScreen: React.FC<AddProductScreenProps> = ({navigation}) => {
         }}
       />
       {errors.date_release && (
-        <TextLabel text={errors.date_release} style={styles.errorText} />
+        <TextLabel
+          text={errors.date_release}
+          style={styles.errorText}
+          testID="date-release-error"
+        />
       )}
-      <TextLabel text={strings.dateRevisionLabel} />
+      <TextLabel
+        text={strings.dateRevisionLabel}
+        testID="date-revision-label"
+      />
       <View
         style={[
           styles.input,
@@ -134,12 +177,22 @@ const AddProductScreen: React.FC<AddProductScreenProps> = ({navigation}) => {
         <TextLabel
           text={dateRevision.toISOString().split('T')[0]}
           style={errors.date_revision ? styles.errorText : undefined}
+          testID="date-revision-value"
         />
       </View>
       {errors.date_revision && (
-        <TextLabel text={errors.date_revision} style={styles.errorText} />
+        <TextLabel
+          text={errors.date_revision}
+          style={styles.errorText}
+          testID="date-revision-error"
+        />
       )}
-      <Button title={strings.submitButton} onPress={handleSubmit} />
+      <Button
+        title={strings.submitButton}
+        onPress={handleSubmit}
+        disabled={!isFormValid}
+        testID="submit-button"
+      />
       <Button
         title={strings.resetButton}
         onPress={() => {
@@ -151,6 +204,7 @@ const AddProductScreen: React.FC<AddProductScreenProps> = ({navigation}) => {
           setErrors({});
         }}
         style={styles.resetButton}
+        testID="reset-button"
       />
     </ScrollView>
   );

@@ -20,6 +20,7 @@ export const ProductList: React.FC<ProductListProps> = ({
         renderItem={renderProduct}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.listContent}
+        testID="product-list"
       />
     </View>
   );
