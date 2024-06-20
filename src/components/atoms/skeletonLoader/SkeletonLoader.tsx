@@ -1,12 +1,11 @@
 import React from 'react';
-import {View, StyleSheet, Animated, Easing} from 'react-native';
+import {Animated, Easing} from 'react-native';
+import styles from './SkeletonLoader.styles';
+import {SkeletonLoaderProps} from './SkeletonLoader.types';
 
-const SkeletonLoader = ({
+export const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
   width,
   height,
-}: {
-  width: number | `${number}%` | 'auto';
-  height: number | `${number}%` | 'auto';
 }) => {
   const opacity = React.useRef(new Animated.Value(0.3)).current;
 
@@ -31,12 +30,3 @@ const SkeletonLoader = ({
 
   return <Animated.View style={[styles.loader, {width, height, opacity}]} />;
 };
-
-const styles = StyleSheet.create({
-  loader: {
-    backgroundColor: '#E0E0E0',
-    borderRadius: 4,
-  },
-});
-
-export default SkeletonLoader;

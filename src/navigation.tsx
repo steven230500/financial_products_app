@@ -1,14 +1,24 @@
-// AppNavigator.tsx
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  StackNavigationProp,
+} from '@react-navigation/stack';
+import {RouteProp} from '@react-navigation/native';
 import HomeScreen from './screens/homeScreen/HomeScreen';
 import ProductDetailScreen from './screens/productDetailScreen/ProductDetailsScreen';
 import AddProductScreen from './screens/addProductScreen/AddProductScreen';
 import EditProductScreen from './screens/editProductScreen/EditProductScreen';
-import HeaderTitle from './components/molecules/HeaderTitle';
+import {HeaderTitle} from './components/molecules';
 
-const Stack = createStackNavigator();
+type RootStackParamList = {
+  Home: undefined;
+  ProductDetail: {productId: string};
+  AddProduct: undefined;
+  EditProduct: {productId: string};
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 const AppNavigator = () => {
   return (

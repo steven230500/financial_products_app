@@ -6,12 +6,11 @@ import {createProduct} from '../../redux/slices/productSlice';
 import {Product} from '../../models/Product';
 import DatePicker from 'react-native-date-picker';
 import {validateProduct} from '../../utils/validation';
-import TextLabel from '../../components/atoms/TextLabel';
-import TextInputField from '../../components/atoms/TextInputField';
-import Button from '../../components/atoms/Button';
+
 import styles from './AddProductScreen.styles';
 import {AddProductScreenProps} from './AddProductScreen.types';
 import {strings} from './AddProductScreen.strings';
+import {Button, TextInputField, TextLabel} from '../../components/atoms';
 
 const AddProductScreen: React.FC<AddProductScreenProps> = ({navigation}) => {
   const [id, setId] = useState<string>('');

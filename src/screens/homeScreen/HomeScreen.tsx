@@ -6,13 +6,12 @@ import {
   fetchAllProducts,
   filterProducts,
 } from '../../redux/slices/productSlice';
-import SkeletonList from '../../components/organisms/SkeletonList';
-import ProductList from '../../components/organisms/ProductList';
-import SearchBar from '../../components/molecules/SearchBar';
-import Button from '../../components/atoms/Button';
 import styles from './HomeScreen.styles';
 import {HomeScreenProps} from './HomeScreen.types';
 import {strings} from './HomeScreen.strings';
+import {Button} from '../../components/atoms';
+import {SearchBar} from '../../components/molecules';
+import {ProductList, SkeletonList} from '../../components/organisms';
 
 const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   const dispatch = useDispatch<AppDispatch>();

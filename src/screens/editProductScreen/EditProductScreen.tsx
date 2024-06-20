@@ -4,13 +4,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState, AppDispatch} from '../../redux/store';
 import {updateProduct, fetchAllProducts} from '../../redux/slices/productSlice';
 import DatePicker from 'react-native-date-picker';
-import TextLabel from '../../components/atoms/TextLabel';
-import TextInputField from '../../components/atoms/TextInputField';
-import Button from '../../components/atoms/Button';
 import {Product} from '../../models/Product';
 import styles from './EditProductScreen.styles';
 import {EditProductScreenProps} from './EditProductScreen.types';
 import {strings} from './EditProductScreen.strings';
+import {Button, TextInputField, TextLabel} from '../../components/atoms';
 
 const EditProductScreen: React.FC<EditProductScreenProps> = ({
   route,

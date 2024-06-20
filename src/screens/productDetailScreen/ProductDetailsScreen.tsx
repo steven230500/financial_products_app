@@ -3,12 +3,12 @@ import {View, Text, Image, Alert} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState, AppDispatch} from '../../redux/store';
 import {deleteProduct, fetchAllProducts} from '../../redux/slices/productSlice';
-import Button from '../../components/atoms/Button';
-import BottomSheet from '../../components/molecules/BottomSheet';
 import {Product} from '../../models/Product';
 import styles from './ProductDetailsScreen.styles';
 import {ProductDetailScreenProps} from './ProductDetailsScreen.types';
 import {strings} from './ProductDetailsScreen.strings';
+import {Button} from '../../components/atoms';
+import {BottomSheet} from '../../components/molecules';
 
 const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({
   route,
