@@ -2,7 +2,7 @@ import React from 'react';
 import {render, fireEvent, waitFor} from '@testing-library/react-native';
 import {Provider} from 'react-redux';
 import configureStore from 'redux-mock-store';
-import AddProductScreen from '../../src/screens/AddProductScreen';
+import AddProductScreen from '../../src/screens/addProductScreen/AddProductScreen';
 import {createProduct} from '../../src/redux/slices/productSlice';
 import {thunk} from 'redux-thunk';
 

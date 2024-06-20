@@ -2,10 +2,10 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import HomeScreen from './screens/HomeScreen';
-import ProductDetailScreen from './screens/ProductDetailsScreen';
-import AddProductScreen from './screens/AddProductScreen';
-import EditProductScreen from './screens/EditProductScreen';
+import HomeScreen from './screens/homeScreen/HomeScreen';
+import ProductDetailScreen from './screens/productDetailScreen/ProductDetailsScreen';
+import AddProductScreen from './screens/addProductScreen/AddProductScreen';
+import EditProductScreen from './screens/editProductScreen/EditProductScreen';
 import HeaderTitle from './components/molecules/HeaderTitle';
 
 const Stack = createStackNavigator();

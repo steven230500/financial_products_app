@@ -1,0 +1,17 @@
+export const strings = {
+  notFound: 'Producto no encontrado',
+  idLabel: 'ID',
+  extraInfo: 'Información extra',
+  nameLabel: 'Nombre',
+  descriptionLabel: 'Descripción',
+  logoLabel: 'Logo',
+  dateReleaseLabel: 'Fecha liberación',
+  dateRevisionLabel: 'Fecha revisión',
+  editButton: 'Editar',
+  deleteButton: 'Eliminar',
+  confirmDelete: 'Confirmar',
+  cancelDelete: 'Cancelar',
+  deleteConfirmation: '¿Estás seguro de eliminar el producto',
+  errorDelete: 'Error',
+  errorDeleteMessage: 'No se pudo eliminar el producto',
+};

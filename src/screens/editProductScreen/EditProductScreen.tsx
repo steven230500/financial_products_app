@@ -1,26 +1,20 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  ScrollView,
-  Alert,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import {View, ScrollView, Alert, TouchableOpacity} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {RootState, AppDispatch} from '../redux/store';
-import {updateProduct, fetchAllProducts} from '../redux/slices/productSlice';
+import {RootState, AppDispatch} from '../../redux/store';
+import {updateProduct, fetchAllProducts} from '../../redux/slices/productSlice';
 import DatePicker from 'react-native-date-picker';
-import TextLabel from '../components/atoms/TextLabel';
-import TextInputField from '../components/atoms/TextInputField';
-import Button from '../components/atoms/Button';
-import {Product} from '../models/Product';
+import TextLabel from '../../components/atoms/TextLabel';
+import TextInputField from '../../components/atoms/TextInputField';
+import Button from '../../components/atoms/Button';
+import {Product} from '../../models/Product';
+import styles from './EditProductScreen.styles';
+import {EditProductScreenProps} from './EditProductScreen.types';
+import {strings} from './EditProductScreen.strings';
 
-const EditProductScreen = ({
+const EditProductScreen: React.FC<EditProductScreenProps> = ({
   route,
   navigation,
-}: {
-  route: any;
-  navigation: any;
 }) => {
   const {productId} = route.params;
   const dispatch = useDispatch<AppDispatch>();
@@ -28,19 +22,21 @@ const EditProductScreen = ({
     state.products.products.find((prod: Product) => prod.id === productId),
   );
 
-  const [id, setId] = useState(product?.id || '');
-  const [name, setName] = useState(product?.name || '');
-  const [description, setDescription] = useState(product?.description || '');
-  const [logo, setLogo] = useState(product?.logo || '');
-  const [dateRelease, setDateRelease] = useState(
+  const [id, setId] = useState<string>(product?.id || '');
+  const [name, setName] = useState<string>(product?.name || '');
+  const [description, setDescription] = useState<string>(
+    product?.description || '',
+  );
+  const [logo, setLogo] = useState<string>(product?.logo || '');
+  const [dateRelease, setDateRelease] = useState<Date>(
     new Date(product?.date_release || ''),
   );
-  const [dateRevision, setDateRevision] = useState(
+  const [dateRevision, setDateRevision] = useState<Date>(
     new Date(product?.date_revision || ''),
   );
-  const [errors, setErrors] = useState<any>({});
-  const [showDateReleasePicker, setShowDateReleasePicker] = useState(false);
-  const [showDateRevisionPicker, setShowDateRevisionPicker] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showDateReleasePicker, setShowDateReleasePicker] =
+    useState<boolean>(false);
 
   useEffect(() => {
     const newDateRevision = new Date(dateRelease);
@@ -62,47 +58,47 @@ const EditProductScreen = ({
       try {
         await dispatch(updateProduct(updatedProduct)).unwrap();
         await dispatch(fetchAllProducts()).unwrap();
-        Alert.alert('Producto actualizado exitosamente');
+        Alert.alert(strings.successTitle, strings.successMessage);
         navigation.goBack();
       } catch (error) {
-        Alert.alert('Error', 'No se pudo actualizar el producto');
+        Alert.alert(strings.errorTitle, strings.errorMessage);
       }
     }
   };
 
   return (
     <ScrollView style={styles.container}>
-      <TextLabel text="Editar Producto" style={styles.title} />
-      <TextLabel text="ID" />
+      <TextLabel text={strings.editProductTitle} style={styles.title} />
+      <TextLabel text={strings.idLabel} />
       <TextInputField
-        placeholder="ID"
+        placeholder={strings.idLabel}
         value={id}
         onChangeText={() => {}}
         style={styles.input}
         editable={false}
       />
-      <TextLabel text="Nombre" />
+      <TextLabel text={strings.nameLabel} />
       <TextInputField
-        placeholder="Nombre"
+        placeholder={strings.namePlaceholder}
         value={name}
         onChangeText={setName}
         style={styles.input}
       />
-      <TextLabel text="Descripción" />
+      <TextLabel text={strings.descriptionLabel} />
       <TextInputField
-        placeholder="Descripción"
+        placeholder={strings.descriptionPlaceholder}
         value={description}
         onChangeText={setDescription}
         style={styles.input}
       />
-      <TextLabel text="Logo" />
+      <TextLabel text={strings.logoLabel} />
       <TextInputField
-        placeholder="URL del logo"
+        placeholder={strings.logoPlaceholder}
         value={logo}
         onChangeText={setLogo}
         style={styles.input}
       />
-      <TextLabel text="Fecha de Liberación" />
+      <TextLabel text={strings.dateReleaseLabel} />
       <TouchableOpacity onPress={() => setShowDateReleasePicker(true)}>
         <View style={styles.input}>
           <TextLabel text={dateRelease.toISOString().split('T')[0]} />
@@ -122,46 +118,17 @@ const EditProductScreen = ({
           setShowDateReleasePicker(false);
         }}
       />
-      <TextLabel text="Fecha de Revisión" />
+      <TextLabel text={strings.dateRevisionLabel} />
       <View style={styles.input}>
         <TextLabel text={dateRevision.toISOString().split('T')[0]} />
       </View>
       <Button
-        title="Guardar Cambios"
+        title={strings.saveButton}
         onPress={handleSubmit}
         style={styles.submitButton}
       />
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  input: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    marginBottom: 8,
-    paddingHorizontal: 8,
-    justifyContent: 'center',
-  },
-  submitButton: {
-    marginTop: 16,
-    backgroundColor: '#ffc107',
-    padding: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 8,
-  },
-});
 
 export default EditProductScreen;

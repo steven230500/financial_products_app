@@ -1,32 +1,30 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  ScrollView,
-  Alert,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import {View, ScrollView, Alert, TouchableOpacity} from 'react-native';
 import {useDispatch} from 'react-redux';
-import {AppDispatch} from '../redux/store';
-import {createProduct} from '../redux/slices/productSlice';
-import {Product} from '../models/Product';
+import {AppDispatch} from '../../redux/store';
+import {createProduct} from '../../redux/slices/productSlice';
+import {Product} from '../../models/Product';
 import DatePicker from 'react-native-date-picker';
-import {validateProduct} from '../utils/validation';
-import TextLabel from '../components/atoms/TextLabel';
-import TextInputField from '../components/atoms/TextInputField';
-import Button from '../components/atoms/Button';
+import {validateProduct} from '../../utils/validation';
+import TextLabel from '../../components/atoms/TextLabel';
+import TextInputField from '../../components/atoms/TextInputField';
+import Button from '../../components/atoms/Button';
+import styles from './AddProductScreen.styles';
+import {AddProductScreenProps} from './AddProductScreen.types';
+import {strings} from './AddProductScreen.strings';
 
-const AddProductScreen = ({navigation}: {navigation: any}) => {
-  const [id, setId] = useState('');
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [logo, setLogo] = useState('');
-  const [dateRelease, setDateRelease] = useState(new Date());
-  const [dateRevision, setDateRevision] = useState(
+const AddProductScreen: React.FC<AddProductScreenProps> = ({navigation}) => {
+  const [id, setId] = useState<string>('');
+  const [name, setName] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [logo, setLogo] = useState<string>('');
+  const [dateRelease, setDateRelease] = useState<Date>(new Date());
+  const [dateRevision, setDateRevision] = useState<Date>(
     new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
   );
-  const [errors, setErrors] = useState<any>({});
-  const [showDateReleasePicker, setShowDateReleasePicker] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showDateReleasePicker, setShowDateReleasePicker] =
+    useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
@@ -51,62 +49,62 @@ const AddProductScreen = ({navigation}: {navigation: any}) => {
     if (valid) {
       try {
         await dispatch(createProduct(newProduct)).unwrap();
-        Alert.alert('Producto agregado exitosamente');
+        Alert.alert(strings.successTitle, strings.successMessage);
         navigation.goBack();
       } catch (error) {
-        Alert.alert('Error', 'No se pudo agregar el producto');
+        Alert.alert(strings.errorTitle, strings.errorMessage);
       }
     }
   };
 
   return (
     <ScrollView style={styles.container}>
-      <TextLabel text="Formulario de Registro" style={styles.title} />
-      <TextLabel text="ID" />
+      <TextLabel text={strings.formTitle} style={styles.title} />
+      <TextLabel text={strings.idLabel} />
       <TextInputField
-        placeholder="ID"
+        placeholder={strings.idPlaceholder}
         value={id}
         onChangeText={setId}
-        style={errors.id && styles.errorInput}
+        style={errors.id ? styles.errorInput : undefined}
       />
       {errors.id && <TextLabel text={errors.id} style={styles.errorText} />}
-      <TextLabel text="Nombre" />
+      <TextLabel text={strings.nameLabel} />
       <TextInputField
-        placeholder="Nombre"
+        placeholder={strings.namePlaceholder}
         value={name}
         onChangeText={setName}
-        style={errors.name && styles.errorInput}
+        style={errors.name ? styles.errorInput : undefined}
       />
       {errors.name && <TextLabel text={errors.name} style={styles.errorText} />}
-      <TextLabel text="Descripción" />
+      <TextLabel text={strings.descriptionLabel} />
       <TextInputField
-        placeholder="Descripción"
+        placeholder={strings.descriptionPlaceholder}
         value={description}
         onChangeText={setDescription}
-        style={errors.description && styles.errorInput}
+        style={errors.description ? styles.errorInput : undefined}
       />
       {errors.description && (
         <TextLabel text={errors.description} style={styles.errorText} />
       )}
-      <TextLabel text="Logo" />
+      <TextLabel text={strings.logoLabel} />
       <TextInputField
-        placeholder="URL del logo"
+        placeholder={strings.logoPlaceholder}
         value={logo}
         onChangeText={setLogo}
-        style={errors.logo && styles.errorInput}
+        style={errors.logo ? styles.errorInput : undefined}
       />
       {errors.logo && <TextLabel text={errors.logo} style={styles.errorText} />}
-      <TextLabel text="Fecha de Liberación" />
+      <TextLabel text={strings.dateReleaseLabel} />
       <TouchableOpacity onPress={() => setShowDateReleasePicker(true)}>
         <View
           style={[
             styles.input,
             styles.dateInput,
-            errors.date_release && styles.errorInput,
+            errors.date_release ? styles.errorInput : undefined,
           ]}>
           <TextLabel
             text={dateRelease.toISOString().split('T')[0]}
-            style={errors.date_release && styles.errorText}
+            style={errors.date_release ? styles.errorText : undefined}
           />
         </View>
       </TouchableOpacity>
@@ -127,24 +125,24 @@ const AddProductScreen = ({navigation}: {navigation: any}) => {
       {errors.date_release && (
         <TextLabel text={errors.date_release} style={styles.errorText} />
       )}
-      <TextLabel text="Fecha de Revisión" />
+      <TextLabel text={strings.dateRevisionLabel} />
       <View
         style={[
           styles.input,
           styles.dateInput,
-          errors.date_revision && styles.errorInput,
+          errors.date_revision ? styles.errorInput : undefined,
         ]}>
         <TextLabel
           text={dateRevision.toISOString().split('T')[0]}
-          style={errors.date_revision && styles.errorText}
+          style={errors.date_revision ? styles.errorText : undefined}
         />
       </View>
       {errors.date_revision && (
         <TextLabel text={errors.date_revision} style={styles.errorText} />
       )}
-      <Button title="Enviar" onPress={handleSubmit} />
+      <Button title={strings.submitButton} onPress={handleSubmit} />
       <Button
-        title="Reiniciar"
+        title={strings.resetButton}
         onPress={() => {
           setId('');
           setName('');
@@ -158,41 +156,5 @@ const AddProductScreen = ({navigation}: {navigation: any}) => {
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 26,
-    color: '#000000',
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  input: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    marginBottom: 8,
-    paddingHorizontal: 8,
-    color: '#000',
-  },
-  dateInput: {
-    justifyContent: 'center',
-  },
-  errorInput: {
-    borderColor: 'red',
-  },
-  errorText: {
-    color: 'red',
-    marginBottom: 8,
-  },
-  resetButton: {
-    backgroundColor: '#ccc',
-    marginTop: 10,
-  },
-});
 
 export default AddProductScreen;

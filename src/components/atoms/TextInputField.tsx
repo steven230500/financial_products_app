@@ -1,5 +1,5 @@
 import React from 'react';
-import {TextInput, StyleSheet} from 'react-native';
+import {TextInput, StyleSheet, TextStyle, StyleProp} from 'react-native';
 
 const TextInputField = ({
   placeholder,
@@ -11,7 +11,7 @@ const TextInputField = ({
   placeholder: string;
   value: string;
   onChangeText: (text: string) => void;
-  style?: object;
+  style?: StyleProp<TextStyle>;
   editable?: boolean;
 }) => {
   return (
@@ -21,7 +21,7 @@ const TextInputField = ({
       placeholderTextColor="#888"
       value={value}
       onChangeText={onChangeText}
-      editable={editable} // Usamos editable aquí
+      editable={editable}
     />
   );
 };

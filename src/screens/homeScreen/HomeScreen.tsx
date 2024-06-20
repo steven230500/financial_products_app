@@ -1,21 +1,27 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {RootState, AppDispatch} from '../redux/store';
-import {fetchAllProducts, filterProducts} from '../redux/slices/productSlice';
-import SkeletonList from '../components/organisms/SkeletonList';
-import ProductList from '../components/organisms/ProductList';
-import SearchBar from '../components/molecules/SearchBar';
-import Button from '../components/atoms/Button';
+import {RootState, AppDispatch} from '../../redux/store';
+import {
+  fetchAllProducts,
+  filterProducts,
+} from '../../redux/slices/productSlice';
+import SkeletonList from '../../components/organisms/SkeletonList';
+import ProductList from '../../components/organisms/ProductList';
+import SearchBar from '../../components/molecules/SearchBar';
+import Button from '../../components/atoms/Button';
+import styles from './HomeScreen.styles';
+import {HomeScreenProps} from './HomeScreen.types';
+import {strings} from './HomeScreen.strings';
 
-const HomeScreen = ({navigation}: {navigation: any}) => {
+const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
   const dispatch = useDispatch<AppDispatch>();
   const products = useSelector(
     (state: RootState) => state.products.filteredProducts,
   );
   const loading = useSelector((state: RootState) => state.products.loading);
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState<string>('');
 
   useEffect(() => {
     dispatch(fetchAllProducts());
@@ -39,28 +45,12 @@ const HomeScreen = ({navigation}: {navigation: any}) => {
         />
       )}
       <Button
-        title="Agregar"
+        title={strings.addButton}
         onPress={() => navigation.navigate('AddProduct')}
         style={styles.addButton}
       />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#fff',
-  },
-  addButton: {
-    marginVertical: 16,
-    backgroundColor: '#ffc107',
-    padding: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 8,
-  },
-});
 
 export default HomeScreen;

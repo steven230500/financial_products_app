@@ -2,7 +2,7 @@ import React from 'react';
 import {render, fireEvent} from '@testing-library/react-native';
 import {Provider} from 'react-redux';
 import configureStore from 'redux-mock-store';
-import HomeScreen from '../../src/screens/HomeScreen';
+import HomeScreen from '../../src/screens/homeScreen/HomeScreen';
 import {thunk} from 'redux-thunk';
 
 const middlewares = [thunk];
