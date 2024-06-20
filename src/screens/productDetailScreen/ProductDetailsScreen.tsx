@@ -10,6 +10,8 @@ import {strings} from './ProductDetailsScreen.strings';
 import {Button} from '../../components/atoms';
 import {BottomSheet} from '../../components/molecules';
 
+const notFoundIcon = require('../../../assets/icons/notFound.png');
+
 const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({
   route,
   navigation,
@@ -21,6 +23,7 @@ const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({
   );
 
   const [showBottomSheet, setShowBottomSheet] = useState<boolean>(false);
+  const [imageError, setImageError] = useState<boolean>(false);
 
   const handleDelete = async () => {
     try {
@@ -56,7 +59,20 @@ const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.label}>{strings.logoLabel}</Text>
-        <Image source={{uri: product.logo}} style={styles.logo} />
+        {product.logo && !imageError ? (
+          <Image
+            source={{uri: product.logo}}
+            style={styles.logo}
+            onError={() => setImageError(true)}
+            testID="product-image"
+          />
+        ) : (
+          <Image
+            source={notFoundIcon}
+            style={styles.logo}
+            testID="product-image-fallback"
+          />
+        )}
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.label}>{strings.dateReleaseLabel}</Text>
@@ -70,11 +86,13 @@ const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({
         title={strings.editButton}
         onPress={() => navigation.navigate('EditProduct', {productId})}
         style={styles.editButton}
+        testID="edit-button"
       />
       <Button
         title={strings.deleteButton}
         onPress={() => setShowBottomSheet(true)}
         style={styles.deleteButton}
+        testID="delete-button"
       />
       <BottomSheet
         visible={showBottomSheet}
@@ -86,11 +104,13 @@ const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({
           title={strings.confirmDelete}
           onPress={handleDelete}
           style={styles.modalConfirmButton}
+          testID="confirm-delete-button"
         />
         <Button
           title={strings.cancelDelete}
           onPress={() => setShowBottomSheet(false)}
           style={styles.modalCancelButton}
+          testID="cancel-delete-button"
         />
       </BottomSheet>
     </View>

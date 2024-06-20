@@ -1,5 +1,18 @@
 import {verifyProductId} from './api';
 
+const isValidUrl = (url: string) => {
+  const pattern = new RegExp(
+    '^(https?:\\/\\/)?' +
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' +
+      '((\\d{1,3}\\.){3}\\d{1,3}))' +
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' +
+      '(\\?[;&a-z\\d%_.~+=-]*)?' +
+      '(\\#[-a-z\\d_]*)?$',
+    'i',
+  );
+  return !!pattern.test(url);
+};
+
 export const validateProduct = async (product: {
   id: string;
   name: string;
@@ -36,8 +49,8 @@ export const validateProduct = async (product: {
     valid = false;
   }
 
-  if (!product.logo) {
-    errors.logo = 'Logo es requerido';
+  if (!product.logo || !isValidUrl(product.logo)) {
+    errors.logo = 'Logo es requerido o no es una URL válida';
     valid = false;
   }
 
